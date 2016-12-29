@@ -1,42 +1,59 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.robotcore.eventloop.opmode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by UDRI1 on 10/5/2016.
  */
+@TeleOp(name = "motorServoTest1", group = "Test")
 public class motorServoTest extends OpMode{
     Servo open;
-    Servo close;
+  //  Servo closed;
+/*
+    final double LEFT_OPEN_POS = 256;
+    final double LEFT_CLOSED_POS = 128;
+    //final double RIGHT
+*/
+
     DcMotor testMotor;
 
     public void init(){
         open = hardwareMap.servo.get("servo_open");
-        close = hardwareMap.servo.get("servo_close");
-        testMotor = hardwareMap.dcMotor.get("test_motor_run");
+        //closed = hardwareMap.servo.get("servo_closed");
+
+        //testMotor = hardwareMap.dcMotor.get("test_motor_run");
     }
 
     public void loop(){
-        boolean isClose = gamepad1.a;
+
+
         boolean isOpen = gamepad1.x;
-        boolean forward = gamepad1.dpad_up;
+        boolean isClosed = gamepad1.y;
+        //boolean isClosed = gamepad1.y;
+        // boolean forward = gamepad1.dpad_up;
 
-        while(isOpen){
-            open.setPosition(100);
+        if(isOpen) {
+            open.setPosition(1);
+            //closed.setPosition(LEFT_OPEN_POS);
         }
-
-        while(isClose){
-            close.setPosition(0);
+        else if(isClosed){
+            open.setPosition(0);
         }
-
-        while(forward){
+        else {
+            open.setPosition(.5);
+        }
+            //closed.setPosition(LEFT_CLOSED_POS);
+        // if(isClosed){
+         //   open.setPosition(LEFT_CLOSED_POS);
+       // }
+        //telemetry.addData("01", "isOpen = ", isOpen);
+/*
+        if(forward){
             testMotor.setPower(1);
         }
-
+*/
     }
 
 }
