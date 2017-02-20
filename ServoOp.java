@@ -19,7 +19,7 @@ public class ServoOp extends OpMode{
     @Override
     public void init(){
 
-        open = hardwareMap.servo.get("servo_open");
+        open = hardwareMap.servo.get("open");
         //close = hardwareMap.servo.get("servo_close");
         open.setPosition(0);
     }

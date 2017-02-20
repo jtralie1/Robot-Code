@@ -22,23 +22,8 @@ public class strongArm extends OpMode
     Servo claw;
     Servo servo6;
 
-    //ints for setting position
-    public double shoulderpos;
-    public double rotatorpos;
-    public double elbowpos;
-    public double wristpos;
-    public double clawpos;
-    public double servo6pos;
-
     public void init()
     {
-
-        shoulderpos = shoulder.getPosition();
-        rotatorpos = shoulder.getPosition();
-        elbowpos = elbow.getPosition();
-        wristpos = wrist.getPosition();
-        clawpos = claw.getPosition();
-        servo6pos = servo6.getPosition();
 
         shoulder = hardwareMap.servo.get("shoulder");
         rotator = hardwareMap.servo.get("rotator");
@@ -54,65 +39,61 @@ public class strongArm extends OpMode
     public void loop()
     {
 
-        /*Plan to check for servo position
-        at the start and then set them to that position,
-        then be able to manipulate them based on their
-        range of movement. --David Molish, 2/3/17
-        */
-
         //binds booleans to buttons
-        boolean moveShoulder = gamepad1.left_bumper;
-        boolean moveRotator = gamepad1.dpad_up;
-        boolean moveElbow = gamepad1.b;
-        boolean moveWrist = gamepad1.dpad_left;
-        boolean moveClaw = gamepad1.y;
-        boolean moveservo6 = gamepad1.start;
-        boolean reverseShoulder = gamepad1.right_bumper;
-        boolean reverseRotator = gamepad1.dpad_down;
-        boolean reverseElbow = gamepad1.a;
-        boolean reverseWrist = gamepad1.dpad_right;
-        boolean reverseClaw = gamepad1.x;
-         boolean reverseservo6 = gamepad1.back;
+        float shoulderStick = gamepad1.right_stick_y;
+        float rotatorStick = gamepad1.left_stick_x;
+        boolean moveElbow = gamepad1.dpad_up;
+        boolean reverseElbow= gamepad1.dpad_down;
+        boolean moveWrist = gamepad1.b;
+        boolean reverseWrist = gamepad1.a;
+        boolean moveClaw = gamepad1.x;
+        boolean reverseClaw = gamepad1.y;
+        boolean moveServo6 = gamepad1.left_bumper;
+        boolean reverseServo6 = gamepad1.right_bumper;
 
-        //makes buttons move da things
-        if(moveShoulder){
-            shoulder.setPosition(shoulderpos + 1);
-        }
-        if(reverseShoulder){
+        //Shoulder controls (continuous)
+        if (shoulderStick > .3)
+            shoulder.setPosition(1);
+        else if(shoulderStick < -.3)
+            shoulder.setPosition(0);
+        else
+            shoulder.setPosition(0.5);
 
-            shoulder.setPosition(shoulderpos);
-        }
-        if(moveRotator)
-            rotator.setPosition(rotatorpos + 1);
-        if(reverseRotator){
+        //Rotator controls (continuous)
+        if (rotatorStick > .3)
+            rotator.setPosition(1);
+        else if(rotatorStick < -.3)
+            rotator.setPosition(0);
+        else
+            rotator.setPosition(0.5);
 
-            rotator.setPosition(rotatorpos);
-        }
-        if(reverseElbow)
-            elbow.setPosition(elbowpos + 1);
-        if(moveElbow){
+        //Elbow controls (continuous)
+        if (moveElbow)
+            elbow.setPosition(1);
+        else if(reverseElbow)
+            elbow.setPosition(0);
+        else
+            elbow.setPosition(0.5);
 
-            elbow.setPosition(elbowpos);
-        }
+        //Wrist controls
         if(moveWrist)
-            wrist.setPosition(wristpos + 1);
-        if(reverseWrist){
+            wrist.setPosition(1);
+        else if(reverseWrist)
+            wrist.setPosition(0);
 
-            wrist.setPosition(wristpos);
-        }
+        //Claw controls
         if(moveClaw)
-            claw.setPosition(clawpos + 1);
-        if(reverseClaw){
+            claw.setPosition(1);
+        else if(reverseClaw)
+            claw.setPosition(0);
 
-            claw.setPosition(clawpos);
-        }
-        if(moveservo6) {
-            servo6.setPosition(servo6pos + 1);
-        }
-        if(reverseservo6){
-
-            servo6.setPosition(servo6pos);
-        }
+        //Servo6 controls (continuous)
+        if (moveServo6)
+            servo6.setPosition(1);
+        else if(reverseServo6)
+            servo6.setPosition(0);
+        else
+            servo6.setPosition(0.5);
 
     }
 }
