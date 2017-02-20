@@ -41,7 +41,9 @@ public class OmniWheelGOOD extends OpMode {
         door = hardwareMap.servo.get("door");
         lift = hardwareMap.servo.get("lift");
         buttonPusher = hardwareMap.servo.get("bp");
-        buttonPos = buttonPusher.getPosition();
+        buttonPos = 0;
+        buttonPusher.setPosition(.6);
+
 // Right motor is mounted backwards from left motor so reverse its direction
         rfmotor.setDirection(DcMotor.Direction.REVERSE);
         rbmotor.setDirection(DcMotor.Direction.REVERSE);
@@ -58,17 +60,19 @@ public class OmniWheelGOOD extends OpMode {
         // boolean shoot = gamepad1.x;
         float leftY = -gamepad1.left_stick_y;
         float rightY = -gamepad1.right_stick_y;
-        float leftY2 = -gamepad2.left_stick_y;
-        float rightY2 = -gamepad2.right_stick_y;
+        float leftY2 = -gamepad2.right_stick_y;
+        float rightY2 = -gamepad2.left_stick_y;
 
         //Trying to configure how to turn left and right
 
-        boolean shootLeft = gamepad2.left_bumper;
-        boolean shootRight = gamepad2.right_bumper;
+        boolean shootLeft = gamepad2.right_bumper;
+        boolean shootSlow = gamepad2.y;
         boolean strafeRight = gamepad1.right_bumper;
         boolean strafeLeft = gamepad1.left_bumper;
-        float closeDoor = gamepad2.right_trigger;
-        boolean extendButton = gamepad2.x;
+        boolean closeDoor = gamepad2.left_bumper;
+        boolean extendButton = gamepad2.dpad_right;
+        boolean retractButton = gamepad2.dpad_left;
+        boolean returnButton = gamepad2.dpad_down;
 
 
       /* if(-0.3 < rightY && rightY < 0.3)
@@ -82,13 +86,13 @@ public class OmniWheelGOOD extends OpMode {
        }*/
 
 
-        if(strafeLeft) {
+        if(strafeLeft && !strafeRight) {
             lbmotor.setPower(1);
             lfmotor.setPower(- 1);
         }
 
 
-        else if(strafeRight){
+        else if(strafeRight && !strafeLeft){
 
             lbmotor.setPower(-1);
             lfmotor.setPower(1);
@@ -152,36 +156,38 @@ public class OmniWheelGOOD extends OpMode {
 
 
         if(shootLeft){
-            shooterLeft.setPower(-1);
+            shooterLeft.setPower(1);
+            shooterRight.setPower(-1);
 
+        }
+        else if (shootSlow){
+            shooterLeft.setPower(.6);
+            shooterRight.setPower(-.6);
         }
         else {
+            shooterRight.setPower(0);
             shooterLeft.setPower(0);
-
         }
 
-        if(shootRight)
-            shooterRight.setPower(1);
-        else
-            shooterRight.setPower(0);
+
 
         telemetry.addData("leftY: ", leftY);
         telemetry.addData("rightY: ", rightY);
 
         if(rightY2 > .3){
-            lift.setPosition(.95);
+            lift.setPosition(.15);
         }
         else {
-            lift.setPosition(.05);
+            lift.setPosition(.85);
         }
 
-        if(closeDoor > -1){
-            door.setPosition(.55);
+        if(closeDoor){
+            door.setPosition(.25);
             telemetry.addData("closeDoor", closeDoor);
             telemetry.update();
         }
         else {
-            door.setPosition(.3);
+            door.setPosition(1);
             telemetry.addData("closeDoor", closeDoor);
             telemetry.update();
         }
@@ -206,11 +212,21 @@ public class OmniWheelGOOD extends OpMode {
             //telemetry.update();
         }
 
-        if(extendButton){
-            buttonPusher.setPosition(buttonPos+=.1);
-        }
-        else
-            buttonPusher.setPosition(buttonPos-=.01);
+       if(extendButton){
+           buttonPusher.setPosition(buttonPos+=.2);
+           telemetry.addData("Extending Button: ",extendButton);
+           telemetry.update();
+       }
+       else if (retractButton){
+            buttonPusher.setPosition(buttonPos-=.2);
+           telemetry.addData("Retracting Button: ",retractButton);
+           telemetry.update();}
+        else if (returnButton) {
+           buttonPusher.setPosition(0);
+           telemetry.addData("Returning Button: ",returnButton);
+           telemetry.update();
+       }
+
 
     }
 
